@@ -1,38 +1,9 @@
+// 📁 app/dashboard/billing/page.tsx or similar
 "use client";
-import { Button } from '@/components/ui/button';
-import React, { useContext, useState } from 'react';
-import { Loader2Icon } from 'lucide-react';
-import { db } from '@/utils/db';
-import { UserSubscription } from '@/utils/schema';
-import { useUser } from '@clerk/nextjs';
-import moment from 'moment';
-import { UserSubscriptionContext } from '@/app/(context)/UserSubscriptionContext';
+import { Button } from "@/components/ui/button";
+import React from "react";
 
 function Billing() {
-  const [loading, setLoading] = useState(false);
-  const { user } = useUser();
-  const { userSubscription, setUserSubscription } = useContext(UserSubscriptionContext);
-
-  const CreateSubscription = async () => {
-    setLoading(true);
-    try {
-      const result = await db.insert(UserSubscription).values({
-        email: user?.primaryEmailAddress?.emailAddress,
-        userName: user?.fullName,
-        active: true,
-        paymentId: 'mock_payment_id',
-        joinDate: moment().format('DD/MM/yyyy'),
-      });
-
-      console.log(result);
-      if (result) window.location.reload();
-    } catch (e) {
-      console.error('Subscription failed', e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <h2 className="text-center font-bold text-3xl my-3">Upgrade With Monthly Plan</h2>
@@ -70,14 +41,8 @@ function Billing() {
             <li>✔ Unlimited Download & Copy</li>
             <li>✔ 1 Year of History</li>
           </ul>
-          <Button
-            disabled={loading || userSubscription}
-            onClick={CreateSubscription}
-            className="w-full rounded-full mt-5 p-6"
-            variant="outline"
-          >
-            {loading && <Loader2Icon className="animate-spin mr-2" />}
-            {userSubscription ? 'Active Plan' : 'Get Started'}
+          <Button className="w-full rounded-full mt-5 p-6" variant="outline">
+            Get Started
           </Button>
         </div>
       </div>
